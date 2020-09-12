@@ -19,4 +19,4 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: iOS - ${{ matrix.destination }}
-      run: xcodebuild -project "FlipperZero.xcodeproj" -scheme "FlipperZero(iOS)" -destination "${{ matrix.destination }}" clean test | xcpretty
+      run: set -o pipefail && xcodebuild -project "FlipperZero/FlipperZero.xcodeproj" -scheme "FlipperZero(iOS)" -destination "${{ matrix.destination }}" clean test | xcpretty
