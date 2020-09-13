@@ -8,15 +8,17 @@ on:
   workflow_dispatch:
 
 jobs:
-  build :
-
+  build:
     runs-on: macos-latest
     env:
       DEVELOPER_DIR: /Applications/Xcode_12_beta.app/Contents/Developer
     strategy:
       matrix:
-        destination: ["OS=14.0,name=iPhone 11 Pro"]
+        destination: ["OS=14.0,name=iPhone 11"]
     steps:
     - uses: actions/checkout@v2
     - name: iOS - ${{ matrix.destination }}
-      run: set -o pipefail && xcodebuild -project "FlipperZero/FlipperZero.xcodeproj" -scheme "FlipperZero(iOS)" -destination "${{ matrix.destination }}" clean test | xcpretty
+      run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "FlipperZero/FlipperZero.xcodeproj" -scheme "FlipperZero(iOS)" -destination "${{ matrix.destination }}" clean test | xcpretty
+    - if: success()
+      name: Upload coverage report
+      run: bash <(curl -s https://codecov.io/bash)
